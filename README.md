@@ -6,15 +6,15 @@ An MCP server for ClickHouse.
 
 ### Tools
 
-* `run-select-query`
+* `run_select_query`
   - Execute SQL queries on your ClickHouse cluster.
   - Input: `sql` (string): The SQL query to execute.
   - All ClickHouse queries are run with `readonly = 1` to ensure they are safe.
 
-* `list-databases`
+* `list_databases`
   - List all databases on your ClickHouse cluster.
 
-* `list-tables`
+* `list_tables`
   - List all tables in a database.
   - Input: `database` (string): The name of the database.
 

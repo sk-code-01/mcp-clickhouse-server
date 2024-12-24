@@ -1,7 +1,8 @@
+from .mcp_server import mcp
 
 
 def main():
-    print("Hello, World!")
+    mcp.run()
 
 
 if __name__ == "__main__":
