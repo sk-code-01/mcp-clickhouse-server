@@ -28,7 +28,7 @@ jobs:
         run: uv python install 3.13
 
       - name: Install Project
-        run: uv sync
+        run: uv sync --all-extras --dev
 
       - name: Run tests
         env:
