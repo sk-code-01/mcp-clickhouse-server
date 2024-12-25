@@ -30,19 +30,6 @@ jobs:
       - name: Install Project
         run: uv sync
 
-      # Wait for ClickHouse to be ready
-      - name: Wait for ClickHouse service
-        run: |
-          for i in {1..30}; do
-            if clickhouse-client --query "SELECT 1"; then
-              echo "ClickHouse is ready"
-              exit 0
-            fi
-            echo "Waiting for ClickHouse to be ready..."
-            sleep 2
-          done
-          echo "ClickHouse did not become ready in time" && exit 1
-
       - name: Run tests
         env:
           CLICKHOUSE_HOST: "localhost"
