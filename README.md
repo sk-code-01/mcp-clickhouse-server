@@ -20,6 +20,8 @@ An MCP server for ClickHouse.
 
 ## Configuration
 
+> **Note**: This is a temporary configuration process that will be significantly improved once the package is published.
+
 1. Run `uv sync` to install the dependencies. To install `uv` follow the instructions [here](https://docs.astral.sh/uv/). Then do `source .venv/bin/activate`.
 
 2. Setup the `.env.production` file with the ClickHouse credentials.

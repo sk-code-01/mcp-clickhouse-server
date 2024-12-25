@@ -37,7 +37,7 @@ def list_databases():
 
 @mcp.tool()
 def list_tables(database: str, like: str = None):
-    logger.info(f"Listing tables in database '{database}'{f" matching '{like}'" if like else ''}")
+    logger.info(f"Listing tables in database '{database}'")
     client = create_clickhouse_client()
     query = f"SHOW TABLES FROM {database}"
     if like:
