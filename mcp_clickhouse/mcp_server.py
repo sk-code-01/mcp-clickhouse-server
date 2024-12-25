@@ -10,15 +10,14 @@ MCP_SERVER_NAME = "mcp-clickhouse"
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(MCP_SERVER_NAME)
 
 load_dotenv()
 
 deps = [
-    "clickhouse-connect", 
+    "clickhouse-connect",
     "python-dotenv",
     "uvicorn",
 ]
