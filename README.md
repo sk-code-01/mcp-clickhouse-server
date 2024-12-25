@@ -20,59 +20,35 @@ An MCP server for ClickHouse.
 
 ## Configuration
 
-1. Configure Claude Desktop to use the MCP server.
-  - On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-  - On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-  - Paste the following temmplate in the file and replace the values with your ClickHouse credentials.
+1. Run `uv sync` to install the dependencies. To install `uv` follow the instructions [here](https://docs.astral.sh/uv/). Then do `source .venv/bin/activate`.
 
-```json
-  {
-    "mcpServers": {
-        "mcp-clickhouse": {
-            "command": "uvx",
-            "args": [
-                "mcp-clickhouse"
-            ],
-            "env": {
-                "CLICKHOUSE_HOST": "<CLICKHOUSE_HOST>",
-                "CLICKHOUSE_PORT": "<CLICKHOUSE_PORT>",
-                "CLICKHOUSE_USER": "<CLICKHOUSE_USER>",
-                "CLICKHOUSE_PASSWORD": "<CLICKHOUSE_PASSWORD>"
-            }
-        }
-    }
-}
+2. Setup the `.env.production` file with the ClickHouse credentials.
+
+```
+CLICKHOUSE_HOST=<CLICKHOUSE_HOST>
+CLICKHOUSE_PORT=<CLICKHOUSE_PORT>
+CLICKHOUSE_USER=<CLICKHOUSE_USER>
+CLICKHOUSE_PASSWORD=<CLICKHOUSE_PASSWORD>
 ```
 
-2. Restart Claude Desktop.
+3. Run `fastmcp install mcp_clickhouse/mcp_server.py -f .env.production` to install the server.
+
+4. Restart Claude Desktop.
+
 
 ## Development
 
-1. Add the following variables to a `.env` file in the root of the repository.
+1. In `test-services` directory run `docker compose up -d` to start the ClickHouse cluster.
+
+2. Add the following variables to a `.env` file in the root of the repository.
 
 ```
 CLICKHOUSE_HOST=localhost
 CLICKHOUSE_PORT=8123
 CLICKHOUSE_USER=default
-CLICKHOUSE_PASSWORD=
+CLICKHOUSE_PASSWORD=clickhouse
 ```
 
-2. Update the `mcp-clickhouse` command in the `claude_desktop_config.json` file to use the `uvx` command.
+3. Run `uv sync` to install the dependencies. To install `uv` follow the instructions [here](https://docs.astral.sh/uv/). Then do `source .venv/bin/activate`.
 
-```json
-{
-    "mcpServers": {
-        "mcp-clickhouse-dev": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "/path/to/repo/mcp-clickhouse",
-                "run",
-                "mcp-clickhouse"
-            ],
-        }
-    }
-}
-```
-
-3. Restart Claude Desktop.
+4. For easy testing, you can run `fastmcp dev mcp_clickhouse/mcp_server.py` to start the MCP server.

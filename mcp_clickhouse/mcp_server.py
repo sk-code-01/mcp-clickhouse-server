@@ -8,7 +8,14 @@ import os
 MCP_SERVER_NAME = "mcp-clickhouse"
 
 load_dotenv()
-mcp = FastMCP(MCP_SERVER_NAME)
+
+deps = [
+    "clickhouse-connect",
+    "python-dotenv",
+    "uvicorn",
+]
+
+mcp = FastMCP(MCP_SERVER_NAME, dependencies=deps)
 
 
 @mcp.tool()
