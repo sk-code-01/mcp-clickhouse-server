@@ -40,4 +40,4 @@ jobs:
           uv run pytest tests
 
       - name: Lint with Ruff
-        run: ruff check .
+        run: uv run ruff check .
