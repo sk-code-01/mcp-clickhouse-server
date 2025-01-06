@@ -35,7 +35,13 @@ CLICKHOUSE_PASSWORD=<CLICKHOUSE_PASSWORD>
 
 3. Run `fastmcp install mcp_clickhouse/mcp_server.py -f .env.production` to install the server.
 
-4. Restart Claude Desktop.
+4. Open the configuration file located at:
+   - On macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+   Locate the command entry for `uv` and replace it with the absolute path to the `uv` executable. This ensures that the correct version of `uv` is used when starting the server.
+
+5. Restart Claude Desktop to apply the changes.
 
 
 ## Development
