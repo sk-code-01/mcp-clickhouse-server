@@ -36,6 +36,8 @@ jobs:
           CLICKHOUSE_PORT: "8123"
           CLICKHOUSE_USER: "default"
           CLICKHOUSE_PASSWORD: ""
+          CLICKHOUSE_SECURE: "false"
+          CLICKHOUSE_VERIFY: "false"
         run: |
           uv run pytest tests
 

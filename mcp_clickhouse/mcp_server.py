@@ -1,10 +1,11 @@
 import logging
-import os
 from typing import Sequence
 
 import clickhouse_connect
 from dotenv import load_dotenv
 from fastmcp import FastMCP
+
+from mcp_clickhouse.mcp_env import config
 
 MCP_SERVER_NAME = "mcp-clickhouse"
 
@@ -102,13 +103,21 @@ def run_select_query(query: str):
 
 
 def create_clickhouse_client():
-    host = os.getenv("CLICKHOUSE_HOST")
-    port = os.getenv("CLICKHOUSE_PORT")
-    username = os.getenv("CLICKHOUSE_USER")
-    logger.info(f"Creating ClickHouse client connection to {host}:{port} as {username}")
-    return clickhouse_connect.get_client(
-        host=host,
-        port=port,
-        username=username,
-        password=os.getenv("CLICKHOUSE_PASSWORD"),
+    client_config = config.get_client_config()
+    logger.info(
+        f"Creating ClickHouse client connection to {client_config['host']}:{client_config['port']} "
+        f"as {client_config['username']} "
+        f"(secure={client_config['secure']}, verify={client_config['verify']}, "
+        f"connect_timeout={client_config['connect_timeout']}s, "
+        f"send_receive_timeout={client_config['send_receive_timeout']}s)"
     )
+    
+    try:
+        client = clickhouse_connect.get_client(**client_config)
+        # Test the connection
+        version = client.server_version
+        logger.info(f"Successfully connected to ClickHouse server version {version}")
+        return client
+    except Exception as e:
+        logger.error(f"Failed to connect to ClickHouse: {str(e)}")
+        raise
