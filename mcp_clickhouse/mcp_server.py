@@ -111,7 +111,7 @@ def create_clickhouse_client():
         f"connect_timeout={client_config['connect_timeout']}s, "
         f"send_receive_timeout={client_config['send_receive_timeout']}s)"
     )
-    
+
     try:
         client = clickhouse_connect.get_client(**client_config)
         # Test the connection

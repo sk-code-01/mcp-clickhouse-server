@@ -42,7 +42,7 @@ class ClickHouseConfig:
     @property
     def port(self) -> int:
         """Get the ClickHouse port.
-        
+
         Defaults to 8443 if secure=True, 8123 if secure=False.
         Can be overridden by CLICKHOUSE_PORT environment variable.
         """
@@ -68,7 +68,7 @@ class ClickHouseConfig:
     @property
     def secure(self) -> bool:
         """Get whether HTTPS is enabled.
-        
+
         Default: True
         """
         return os.getenv("CLICKHOUSE_SECURE", "true").lower() == "true"
@@ -76,7 +76,7 @@ class ClickHouseConfig:
     @property
     def verify(self) -> bool:
         """Get whether SSL certificate verification is enabled.
-        
+
         Default: True
         """
         return os.getenv("CLICKHOUSE_VERIFY", "true").lower() == "true"
@@ -84,7 +84,7 @@ class ClickHouseConfig:
     @property
     def connect_timeout(self) -> int:
         """Get the connection timeout in seconds.
-        
+
         Default: 30
         """
         return int(os.getenv("CLICKHOUSE_CONNECT_TIMEOUT", "30"))
@@ -92,14 +92,14 @@ class ClickHouseConfig:
     @property
     def send_receive_timeout(self) -> int:
         """Get the send/receive timeout in seconds.
-        
+
         Default: 300 (ClickHouse default)
         """
         return int(os.getenv("CLICKHOUSE_SEND_RECEIVE_TIMEOUT", "300"))
 
     def get_client_config(self) -> dict:
         """Get the configuration dictionary for clickhouse_connect client.
-        
+
         Returns:
             dict: Configuration ready to be passed to clickhouse_connect.get_client()
         """
@@ -122,7 +122,7 @@ class ClickHouseConfig:
 
     def _validate_required_vars(self) -> None:
         """Validate that all required environment variables are set.
-        
+
         Raises:
             ValueError: If any required environment variable is missing.
         """
