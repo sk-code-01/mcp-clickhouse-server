@@ -22,6 +22,7 @@ deps = [
     "clickhouse-connect",
     "python-dotenv",
     "uvicorn",
+    "pip-system-certs",
 ]
 
 mcp = FastMCP(MCP_SERVER_NAME, dependencies=deps)
