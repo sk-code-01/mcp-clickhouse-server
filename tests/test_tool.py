@@ -17,12 +17,18 @@ class TestClickhouseTools(unittest.TestCase):
         cls.test_db = "test_tool_db"
         cls.test_table = "test_table"
         cls.client.command(f"CREATE DATABASE IF NOT EXISTS {cls.test_db}")
+
+        # Drop table if exists to ensure clean state
+        cls.client.command(f"DROP TABLE IF EXISTS {cls.test_db}.{cls.test_table}")
+
+        # Create table with comments
         cls.client.command(f"""
-            CREATE TABLE IF NOT EXISTS {cls.test_db}.{cls.test_table} (
-                id UInt32,
-                name String
+            CREATE TABLE {cls.test_db}.{cls.test_table} (
+                id UInt32 COMMENT 'Primary identifier',
+                name String COMMENT 'User name field'
             ) ENGINE = MergeTree()
             ORDER BY id
+            COMMENT 'Test table for unit testing'
         """)
         cls.client.command(f"""
             INSERT INTO {cls.test_db}.{cls.test_table} (id, name) VALUES (1, 'Alice'), (2, 'Bob')
@@ -67,6 +73,23 @@ class TestClickhouseTools(unittest.TestCase):
         result = run_select_query(query)
         self.assertIsInstance(result, str)
         self.assertIn("error running query", result)
+
+    def test_table_and_column_comments(self):
+        """Test that table and column comments are correctly retrieved."""
+        result = list_tables(self.test_db)
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 1)
+
+        table_info = result[0]
+        # Verify table comment
+        self.assertEqual(table_info["comment"], "Test table for unit testing")
+
+        # Get columns by name for easier testing
+        columns = {col["name"]: col for col in table_info["columns"]}
+
+        # Verify column comments
+        self.assertEqual(columns["id"]["comment"], "Primary identifier")
+        self.assertEqual(columns["name"]["comment"], "User name field")
 
 
 if __name__ == "__main__":
