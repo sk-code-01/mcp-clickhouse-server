@@ -4,7 +4,7 @@ from typing import Sequence
 import clickhouse_connect
 from clickhouse_connect.driver.binding import quote_identifier, format_query_value
 from dotenv import load_dotenv
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 
 from mcp_clickhouse.mcp_env import config
 
