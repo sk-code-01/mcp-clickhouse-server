@@ -1,5 +1,7 @@
 import logging
 from typing import Sequence
+import concurrent.futures
+import atexit
 
 import clickhouse_connect
 from clickhouse_connect.driver.binding import quote_identifier, format_query_value
@@ -15,6 +17,10 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(MCP_SERVER_NAME)
+
+QUERY_EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+atexit.register(lambda: QUERY_EXECUTOR.shutdown(wait=True))
+SELECT_QUERY_TIMEOUT_SECS = 30
 
 load_dotenv()
 
@@ -105,9 +111,7 @@ def list_tables(database: str, like: str = None):
     return tables
 
 
-@mcp.tool()
-def run_select_query(query: str):
-    logger.info(f"Executing SELECT query: {query}")
+def execute_query(query: str):
     client = create_clickhouse_client()
     try:
         res = client.query(query, settings={"readonly": 1})
@@ -123,6 +127,19 @@ def run_select_query(query: str):
     except Exception as err:
         logger.error(f"Error executing query: {err}")
         return f"error running query: {err}"
+
+
+@mcp.tool()
+def run_select_query(query: str):
+    logger.info(f"Executing SELECT query: {query}")
+    future = QUERY_EXECUTOR.submit(execute_query, query)
+    try:
+        result = future.result(timeout=SELECT_QUERY_TIMEOUT_SECS)
+        return result
+    except concurrent.futures.TimeoutError:
+        logger.warning(f"Query timed out after {SELECT_QUERY_TIMEOUT_SECS} seconds: {query}")
+        future.cancel()
+        return f"Queries taking longer than {SELECT_QUERY_TIMEOUT_SECS} seconds are currently not supported."
 
 
 def create_clickhouse_client():
