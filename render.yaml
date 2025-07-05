@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: mcp-clickhouse
+    env: python
+    buildCommand: ""
+    startCommand: "python -m mcp_clickhouse.main"
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: CLICKHOUSE_HOST
+        value: your-clickhouse-host.com
+      - key: CLICKHOUSE_PORT
+        value: "8123"
+      - key: CLICKHOUSE_USER
+        value: default
+      - key: CLICKHOUSE_PASSWORD
+        fromSecret: CLICKHOUSE_PASSWORD
+      - key: CLICKHOUSE_DATABASE
+        value: default
+      - key: CLICKHOUSE_SECURE
+        value: "true"
+      - key: CLICKHOUSE_ENABLED
+        value: "true"
+      - key: CHDB_ENABLED
+        value: "false"
